@@ -1,24 +1,21 @@
 package com.example.aslcav1.activities;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Toast;
-import com.example.aslcav1.R;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
 import com.example.aslcav1.databinding.ActivitySignUpBinding;
 import com.example.aslcav1.utilities.Constants;
 import com.example.aslcav1.utilities.PreferenceManager;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -39,6 +36,7 @@ public class SignUpActivity extends AppCompatActivity {
         preferenceManager = new PreferenceManager((getApplicationContext()));
         setListeners();
     }
+
     private void setListeners(){
         binding.textSignIn.setOnClickListener(v -> onBackPressed());
         binding.buttonSignUp.setOnClickListener(v -> {
@@ -96,8 +94,8 @@ public class SignUpActivity extends AppCompatActivity {
     private final ActivityResultLauncher<Intent> pickImage = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-                if(result.getResultCode() == RESULT_OK) {
-                    if(result.getData() != null) {
+                if (result.getResultCode() == RESULT_OK) {
+                    if (result.getData() != null) {
                         Uri imageUri = result.getData().getData();
                         try {
                             InputStream inputStream = getContentResolver().openInputStream(imageUri);
@@ -105,7 +103,7 @@ public class SignUpActivity extends AppCompatActivity {
                             binding.imageProfile.setImageBitmap(bitmap);
                             binding.textAddImage.setVisibility(View.GONE);
                             encodedImage = encodeImage(bitmap);
-                        }catch (FileNotFoundException e) {
+                        } catch (FileNotFoundException e) {
                             e.printStackTrace();
                         }
                     }

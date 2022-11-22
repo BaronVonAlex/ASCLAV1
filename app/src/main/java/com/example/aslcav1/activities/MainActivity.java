@@ -1,22 +1,21 @@
 package com.example.aslcav1.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Base64;
 import android.widget.Toast;
-
-import com.example.aslcav1.R;
+import androidx.appcompat.app.AppCompatActivity;
 import com.example.aslcav1.databinding.ActivityMainBinding;
 import com.example.aslcav1.utilities.Constants;
 import com.example.aslcav1.utilities.PreferenceManager;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.FirebaseMessagingService;
+
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,7 +30,13 @@ public class MainActivity extends AppCompatActivity {
         preferenceManager = new PreferenceManager(getApplicationContext());
         loadUserDetails();
         getToken();
+        setListeners();
     }
+
+    private void setListeners() {
+        binding.imageSignOut.setOnClickListener(v -> signOut());
+    }
+
     private void loadUserDetails() {
         binding.textName.setText(preferenceManager.getString(Constants.KEY_NAME));
         byte[] bytes = Base64.decode(preferenceManager.getString(Constants.KEY_IMAGE), Base64.DEFAULT);
@@ -57,4 +62,19 @@ public class MainActivity extends AppCompatActivity {
                 .addOnFailureListener(e -> showToast("Unable to update Token"));
     }
 
+    private void signOut() {
+        showToast("Singing out...");
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        DocumentReference documentReference = database.collection(Constants.KEY_COLLECTION_USERS)
+                        .document(preferenceManager.getString(Constants.KEY_USER_ID));
+        HashMap<String, Object> updates = new HashMap<>();
+        updates.put(Constants.KEY_FCM_TOKEN, FieldValue.delete());
+        documentReference.update(updates)
+                .addOnSuccessListener(unused -> {
+                    preferenceManager.clear();
+                    startActivity(new Intent(getApplicationContext(), SignInActivity.class));
+                    finish();
+                })
+                .addOnFailureListener(e -> showToast("Unable to sign out"));
+    }
 }

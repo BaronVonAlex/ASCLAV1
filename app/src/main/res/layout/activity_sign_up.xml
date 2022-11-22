@@ -146,8 +146,6 @@
 
         </FrameLayout>
 
-
-
         <TextView
             android:id="@+id/textSignIn"
             android:layout_width="match_parent"

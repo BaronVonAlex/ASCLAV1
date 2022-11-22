@@ -1,22 +1,16 @@
 package com.example.aslcav1.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Toast;
-
-import com.example.aslcav1.R;
+import androidx.appcompat.app.AppCompatActivity;
 import com.example.aslcav1.databinding.ActivitySignInBinding;
 import com.example.aslcav1.utilities.Constants;
 import com.example.aslcav1.utilities.PreferenceManager;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.HashMap;
 
 public class SignInActivity extends AppCompatActivity {
 
@@ -31,13 +25,13 @@ public class SignInActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         setListeners();
     }
+
     private void setListeners(){
         binding.textCreateNewAccount.setOnClickListener(v ->
                 startActivity(new Intent(getApplicationContext(), SignUpActivity.class)));
         binding.buttonSignIn.setOnClickListener(v -> {
-            if (isValidSignInDetails()) {
-                signIn();
-            }
+                    if (isValidSignInDetails()) {signIn();
+                    }
         });
     }
 
@@ -67,7 +61,7 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void loading(Boolean isLoading) {
-        if(isLoading) {
+        if (isLoading) {
             binding.buttonSignIn.setVisibility(View.INVISIBLE);
             binding.progressBar.setVisibility(View.VISIBLE);
         } else {
@@ -79,6 +73,7 @@ public class SignInActivity extends AppCompatActivity {
     private void showToast(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
+
     private Boolean isValidSignInDetails() {
         if (binding.inputEmail.getText().toString().trim().isEmpty()) {
             showToast("Enter Email");
